@@ -10,4 +10,4 @@ if __name__=='__main__':
 
     sunset: datetime = sun(city.observer, date.today())['sunset']
 
-    print(f'Today the sun will set at {sunset.hour}:{sunset.minute}')
+    print(f'Today the sun will set at {sunset.hour:02}:{sunset.minute:02}')
