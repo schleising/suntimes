@@ -17,7 +17,7 @@ def GetDayNumberSuffix(dayNumber: int) -> str:
         # 2nd or 22nd
         case 2 | 22:
             return 'nd'
-        # 3rd or 33rd
+        # 3rd or 23rd
         case 3 | 23:
             return 'rd'
         # All other numbers return th
