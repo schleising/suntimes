@@ -13,7 +13,7 @@ if __name__=='__main__':
     warnings.filterwarnings('ignore', message='The localize method is no longer necessary')
 
     # Set the city to Brighton UK
-    city = LocationInfo('Brighton', 'England', latitude=50.84472625108979, longitude=-0.1414355729975994)
+    city = LocationInfo('Brighton', 'England', 'Europe/London', latitude=50.84472625108979, longitude=-0.1414355729975994)
 
     # Get the input string
     inputString = ' '.join(sys.argv[1:])
@@ -29,9 +29,6 @@ if __name__=='__main__':
             print('Could not parse date, showing sunset time for today')
         sunsetDate = datetime.today()
 
-    # Assume the date is in the future
-    timeInPast = False
-
     # Find the difference between the requested date and today
     match (sunsetDate.date() - date.today()).days:
         # Today and the requested date are the same
@@ -46,18 +43,14 @@ if __name__=='__main__':
         case dayDiff if dayDiff > 6 or dayDiff < 0:
             dayString = sunsetDate.strftime('On %A %d %B %Y')
 
-            # Register that the date is in the past
-            if dayDiff < 0:
-                timeInPast = True
-
         # The requested date is in this week, but not today or tomorrow, so just print the day name
         case _:
             dayString = sunsetDate.strftime('On %A')
 
     # Get the sunset time
-    sunset: datetime = sun(city.observer, sunsetDate.date())['sunset']
+    sunset: datetime = sun(city.observer, sunsetDate.date(), tzinfo=city.timezone)['sunset']
 
-    # Print the sunset time with the formatted day string
+    # Print the sunset time with the formatted day string, set to the future tense if sunset is in the future
     print()
-    print(f'{dayString} the sun {"" if timeInPast else "will "}set at {sunset.hour:02}:{sunset.minute:02}')
+    print(f'{dayString} the sun {"" if sunset < datetime.now(tz=city.tzinfo) else "will "}set at {sunset.hour:02}:{sunset.minute:02}')
     print()
