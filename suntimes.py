@@ -4,9 +4,9 @@ import warnings
 import sys
 
 from astral import LocationInfo
-from dateparser import parse
-
 from astral.sun import sun
+
+from dateparser import parse
 
 # Function to return st, nd, rd or th depending on the day number
 def GetDayNumberSuffix(dayNumber: int) -> str:
