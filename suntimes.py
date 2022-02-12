@@ -8,6 +8,22 @@ from dateparser import parse
 
 from astral.sun import sun
 
+# Function to return st, nd, rd or th depending on the day number
+def GetDayNumberSuffix(dayNumber: int) -> str:
+    match dayNumber:
+        # 1st, 21st or 31st
+        case 1 | 21 | 31:
+            return 'st'
+        # 2nd or 22nd
+        case 2 | 22:
+            return 'nd'
+        # 3rd or 33rd
+        case 3 | 23:
+            return 'rd'
+        # All other numbers return th
+        case _:
+            return 'th'
+
 if __name__=='__main__':
     # Filter out a warning from dateparser
     warnings.filterwarnings('ignore', message='The localize method is no longer necessary')
@@ -41,7 +57,7 @@ if __name__=='__main__':
 
         # The requested date is more than a week away, in this case print the day of month and month
         case dayDiff if dayDiff > 6 or dayDiff < 0:
-            dayString = sunsetDate.strftime('On %A %d %B %Y')
+            dayString = sunsetDate.strftime(f'On %A the {sunsetDate.day}{GetDayNumberSuffix(sunsetDate.day)} of %B %Y')
 
         # The requested date is in this week, but not today or tomorrow, so just print the day name
         case _:
