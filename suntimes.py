@@ -24,6 +24,28 @@ def GetDayNumberSuffix(dayNumber: int) -> str:
         case _:
             return 'th'
 
+# Function to return a string like Today, Tomorrow or On Tuesday the 1st, etc...
+def GetDayString(sunsetDate: datetime) -> str:
+    # Find the difference between the requested date and today
+    match (sunsetDate.date() - date.today()).days:
+        # Today and the requested date are the same
+        case 0:
+            dayString = 'Today'
+
+        # The requested date is one day into the future (i.e., tomorrow)
+        case 1:
+            dayString = 'Tomorrow'
+
+        # The requested date is more than a week away, in this case print the day of month and month
+        case dayDiff if dayDiff > 6 or dayDiff < 0:
+            dayString = sunsetDate.strftime(f'On %A the {sunsetDate.day}{GetDayNumberSuffix(sunsetDate.day)} of %B %Y')
+
+        # The requested date is in this week, but not today or tomorrow, so just print the day name
+        case _:
+            dayString = sunsetDate.strftime('On %A')
+
+    return dayString
+
 if __name__=='__main__':
     # Filter out a warning from dateparser
     warnings.filterwarnings('ignore', message='The localize method is no longer necessary')
@@ -45,28 +67,10 @@ if __name__=='__main__':
             print('Could not parse date, showing sunset time for today')
         sunsetDate = datetime.today()
 
-    # Find the difference between the requested date and today
-    match (sunsetDate.date() - date.today()).days:
-        # Today and the requested date are the same
-        case 0:
-            dayString = 'Today'
-
-        # The requested date is one day into the future (i.e., tomorrow)
-        case 1:
-            dayString = 'Tomorrow'
-
-        # The requested date is more than a week away, in this case print the day of month and month
-        case dayDiff if dayDiff > 6 or dayDiff < 0:
-            dayString = sunsetDate.strftime(f'On %A the {sunsetDate.day}{GetDayNumberSuffix(sunsetDate.day)} of %B %Y')
-
-        # The requested date is in this week, but not today or tomorrow, so just print the day name
-        case _:
-            dayString = sunsetDate.strftime('On %A')
-
     # Get the sunset time
     sunset: datetime = sun(city.observer, sunsetDate.date(), tzinfo=city.timezone)['sunset']
 
     # Print the sunset time with the formatted day string, set to the future tense if sunset is in the future
     print()
-    print(f'{dayString} the sun {"" if sunset < datetime.now(tz=city.tzinfo) else "will "}set at {sunset.hour:02}:{sunset.minute:02}')
+    print(f'{GetDayString(sunsetDate)} the sun {"" if sunset < datetime.now(tz=city.tzinfo) else "will "}set at {sunset.hour:02}:{sunset.minute:02}')
     print()
