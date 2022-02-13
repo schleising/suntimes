@@ -1,5 +1,6 @@
 #! /Users/steve/Downloads/.suntimes_env/bin/python
 from datetime import date, datetime
+from zoneinfo import ZoneInfo
 import warnings
 import sys
 
@@ -68,9 +69,9 @@ if __name__=='__main__':
         sunsetDate = datetime.today()
 
     # Get the sunset time
-    sunset: datetime = sun(city.observer, sunsetDate.date(), tzinfo=city.timezone)['sunset']
+    sunset: datetime = sun(city.observer, sunsetDate.date(), tzinfo=ZoneInfo('Europe/London'))['sunset']
 
     # Print the sunset time with the formatted day string, set to the future tense if sunset is in the future
     print()
-    print(f'{GetDayString(sunsetDate)} the sun {"" if sunset < datetime.now(tz=city.tzinfo) else "will "}set at {sunset.hour:02}:{sunset.minute:02}')
+    print(f'{GetDayString(sunsetDate)} the sun {"" if sunset < datetime.now(tz=ZoneInfo("Europe/London")) else "will "}set at {sunset.hour:02}:{sunset.minute:02}')
     print()
