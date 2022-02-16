@@ -58,7 +58,7 @@ if __name__=='__main__':
     inputString = ' '.join(sys.argv[1:])
 
     # Parse the input string using dateparser
-    sunsetDate = parse(inputString, settings={'PREFER_DATES_FROM': 'future'})
+    sunsetDate = parse(inputString, settings={'PREFER_DATES_FROM': 'future', 'DATE_ORDER': 'DMY'})
 
     # If dateparser failed to parse the date, set the date to today
     if sunsetDate is None:
