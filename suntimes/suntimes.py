@@ -47,7 +47,7 @@ def GetDayString(sunsetDate: datetime) -> str:
 
     return dayString
 
-def main() -> None:
+def main() -> str:
     # Filter out a warning from dateparser
     warnings.filterwarnings('ignore', message='The localize method is no longer necessary')
 
@@ -71,10 +71,15 @@ def main() -> None:
     # Get the sunset time
     sunset: datetime = sun(city.observer, sunsetDate.date(), tzinfo=ZoneInfo('Europe/London'))['sunset']
 
+    # Create the output string
+    output = f'{GetDayString(sunsetDate)} the sun {"" if sunset < datetime.now(tz=ZoneInfo("Europe/London")) else "will "}set at {sunset.hour:02}:{sunset.minute:02}'
+
     # Print the sunset time with the formatted day string, set to the future tense if sunset is in the future
     print()
-    print(f'{GetDayString(sunsetDate)} the sun {"" if sunset < datetime.now(tz=ZoneInfo("Europe/London")) else "will "}set at {sunset.hour:02}:{sunset.minute:02}')
+    print(output)
     print()
+
+    return output
 
 if __name__=='__main__':
     main()
